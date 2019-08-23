@@ -10,3 +10,6 @@ typedef struct {
 
 //funcao chamada para adicionar uma palavra ao dicionario
 void palavra_add(FILE *dic);
+
+//verifica se a palavra esta no dicionario
+void dic_check();

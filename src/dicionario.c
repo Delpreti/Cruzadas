@@ -46,6 +46,11 @@ void palavra_add(FILE *dic){
 	sair = 0;
 }
 
+//verifica se a palavra esta no dicionario
+void dic_check(){
+	return;
+}
+
 //Inicializa um novo dicionario, usar com cautela
 void dic_novo(){
 	FILE *f = fopen("dicionario.bin", "wb");
