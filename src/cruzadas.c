@@ -8,6 +8,7 @@
 
 #include "dicionario.h"
 #include "mapa.h"
+#include "letras.h"
 
 typedef struct {
 	int x;
@@ -167,6 +168,8 @@ int main(void){
 	writing = 0; //false
 	word_count = 0;
 	score = 0;
+
+	mao_init();
 
 	while(!sair) {
 

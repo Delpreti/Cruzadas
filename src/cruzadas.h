@@ -18,3 +18,4 @@ int sair;
 // Janelas fixas
 WINDOW *game;
 WINDOW *sidepanel;
+WINDOW *panel_bottom;

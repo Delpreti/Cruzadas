@@ -8,15 +8,29 @@
 
 #include "cruzadas.h"
 
+#define HANDSIZE 9
+
 typedef struct {
 	char digito;
-	coord where;
+	int x;
+	int y;
 } letra;
 
 typedef struct {
 	letra letras[30];	
 } palavra;
 
-palavra ativa;
+//palavra ativa;
 
-//ativa.letras[0].digito;
+void letra_generate(letra mao[], int posicao){
+	mao[posicao].digito = 97 + (rand() % 25);
+	mvwprintw(panel_bottom, 5, posicao*2 + 12, "%c", mao[posicao].digito);
+	wrefresh(panel_bottom);
+}
+
+void mao_init(){
+	letra mao[HANDSIZE];
+	for(int i = 0; i < HANDSIZE; i++){
+		letra_generate(mao, i);
+	}
+}
