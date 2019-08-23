@@ -10,7 +10,11 @@ typedef struct {
 	int size;
 } coord;
 
-//Variavel global do posicionamento atual do cursor
+// Variavel global do posicionamento atual do cursor
 coord active;
 
 int sair;
+
+// Janelas fixas
+WINDOW *game;
+WINDOW *sidepanel;

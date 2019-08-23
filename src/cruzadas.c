@@ -7,6 +7,7 @@
 #include <stdarg.h>
 
 #include "dicionario.h"
+#include "mapa.h"
 
 typedef struct {
 	int x;
@@ -26,8 +27,11 @@ int direcao;
 int writing; //gamestate
 int word_count;
 
+int score; //Placar atual do jogo
+
 WINDOW *game;
 WINDOW *sidepanel;
+WINDOW *panel_bottom;
 
 // Funcao para verificar se uma ou mais teclas foram pressionadas
 int key_pressed(int keyvar, int quant, ...) {
@@ -43,11 +47,15 @@ int key_pressed(int keyvar, int quant, ...) {
 	return 0;
 }
 
-void draw_border() {
-	for(int i = 0; i < COLS; i++) {
+void draw_line(int lin, int col) {
+	for(int i = 0; i < lin; i++) {
 		mvwaddch(sidepanel, i, 0, ACS_VLINE);
 	}
 	wrefresh(sidepanel);
+	for(int j = 0; j <= col; j++) {
+		mvwaddch(panel_bottom, 0, j, ACS_HLINE);
+	}
+	wrefresh(panel_bottom);
 }
 
 void palavra_init(){
@@ -59,6 +67,9 @@ void palavra_init(){
 	// Guarda a posicao inicial da primeira letra
 	inicio.x = active.x;
 	inicio.y = active.y;
+
+	jogada.upper = inicio.y - 1;
+	jogada.western = inicio.x - 1;
 
 	// reserva espaco para guardar a palavra
 	p_string = malloc(30*sizeof(char));
@@ -73,7 +84,9 @@ void palavra_write(char letra){
 	}
 	void letra_add(){
 		mvwaddch(game, active.y, active.x, letra);
-		p_string[active.size] = letra;
+		if(letra >= 97 && letra <= 122){
+			p_string[active.size] = letra;
+		}
 		active.size++;
 		if(direcao != 1){
 			active.x++;
@@ -96,12 +109,31 @@ void palavra_write(char letra){
 }
 
 void palavra_end(){
-	for(int k = 0; k <= active.size; k++){
-		mvwprintw(sidepanel, word_count+2, k+2, "%c", p_string[k]);
+	if(direcao == 0){
+		jogada.lower = active.y + 1;
+		jogada.eastern = active.x;
+	} else if(direcao == 1){
+		jogada.lower = active.y;
+		jogada.eastern = active.x + 1;
 	}
-	wrefresh(sidepanel);
+	if(word_count == 0){
+		mapa.bounds = jogada;
+		mapa.height = mapa.bounds.lower - mapa.bounds.upper;
+		mapa.width = mapa.bounds.eastern - mapa.bounds.western;
+		mapa.area = (mapa.width - 1) * (mapa.height - 1);
+	}
+	draw_border();
+
 	dic_check();
+	for(int k = 0; k < active.size; k++){
+		mvwprintw(sidepanel, word_count+5, k+2, "%c", p_string[k]);
+	}
 	word_count++;
+	score += active.size;
+	mvwprintw(sidepanel, 1, 2, "Score: %d", score);
+	mvwprintw(sidepanel, 2, 2, "Area: %d", mapa.area);
+	mvwprintw(sidepanel, 3, 2, "palavras: %d", word_count);
+	wrefresh(sidepanel);
 	free(p_string);
 	writing = 0; //false
 }
@@ -118,9 +150,10 @@ int main(void){
 	int linhas = LINES;
 	int colunas = COLS;
 
-	game = newwin(linhas, colunas*0.8, 0, 0);
-	sidepanel = newwin(linhas, colunas*0.2, 0, (colunas*0.8)+1);
-	draw_border();
+	game = newwin(linhas*0.8, colunas*0.8, 0, 0);
+	sidepanel = newwin(linhas, colunas*0.2, 0, colunas*0.8);
+	panel_bottom = newwin(linhas*0.2, colunas*0.8, linhas*0.8, 0);
+	draw_line(linhas, colunas);
 
 	keypad(game, TRUE);
 	srand(time(NULL));
@@ -133,6 +166,7 @@ int main(void){
 	sair = 0;
 	writing = 0; //false
 	word_count = 0;
+	score = 0;
 
 	while(!sair) {
 
