@@ -16,8 +16,14 @@ typedef struct {
 	letra letras[30];	
 } palavra;
 
+// Permite ao usuario selecionar uma letra da mao
+void letra_select();
+
 // Gera uma letra na mao do jogador
 void letra_generate(letra mao[], int posicao);
 
 // Inicializa a mao do jogador
 void mao_init();
+
+// Repoe as letras que sairam da mao
+void mao_refill();

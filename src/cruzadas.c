@@ -79,36 +79,6 @@ void palavra_init(){
 	direcao = -1;
 }
 
-void palavra_write(char letra){
-	if(writing == 0){
-		return;
-	}
-	void letra_add(){
-		mvwaddch(game, active.y, active.x, letra);
-		if(letra >= 97 && letra <= 122){
-			p_string[active.size] = letra;
-		}
-		active.size++;
-		if(direcao != 1){
-			active.x++;
-		} else if(direcao == 1){
-			active.y++;
-		}
-	}
-	if(active.size == 0){
-		letra_add();
-	} else {
-		if(inicio.x == active.x && direcao != 0){ //letra escrita na vertical
-			letra_add();
-			direcao = 1;
-		}
-		if(inicio.y == active.y && direcao != 1){ //letra escrita na horizontal
-			letra_add();
-			direcao = 0;
-		}
-	}
-}
-
 void palavra_end(){
 	if(direcao == 0){
 		jogada.lower = active.y + 1;
@@ -124,6 +94,8 @@ void palavra_end(){
 		mapa.area = (mapa.width - 1) * (mapa.height - 1);
 	}
 	draw_border();
+
+	mao_refill();
 
 	dic_check();
 	for(int k = 0; k < active.size; k++){
@@ -200,7 +172,9 @@ int main(void){
 				palavra_init();
 			}
 		} else {
-			palavra_write(tecla);
+			if(writing == 1){
+				letra_select();
+			}
 		}
 		wrefresh(game);
 	}

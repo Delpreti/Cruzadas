@@ -13,6 +13,13 @@ typedef struct {
 // Variavel global do posicionamento atual do cursor
 coord active;
 
+//Variaveis para as strings
+coord inicio;
+char *p_string;
+int direcao;
+int writing; //gamestate
+int word_count;
+
 int sair;
 
 // Janelas fixas
