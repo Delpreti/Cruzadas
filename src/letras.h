@@ -12,10 +12,6 @@ typedef struct {
 	int y;
 } letra;
 
-typedef struct {
-	letra letras[30];	
-} palavra;
-
 // Permite ao usuario selecionar uma letra da mao
 void letra_select();
 
